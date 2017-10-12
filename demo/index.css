@@ -1,0 +1,10 @@
+@media print{
+.no-print{
+  display: none;
+}
+}
+
+.action-cell-style-flat{
+  padding: 0px !important;
+  width: 50px !important;
+}

@@ -1,0 +1,144 @@
+<md-table-container>
+  <table print-table="$ctrl.objects" md-table md-row-select="$ctrl.config.rowSelect" multiple="{{$ctrl.config.multiple}}" ng-model="$ctrl.selected"
+    md-progress="promise">
+    <thead md-head>
+      <tr md-row>
+        <th md-column ng-repeat="header in $ctrl.headers" md-numeric="header.numeric" flex class="table-header">
+          <p translate="{{header.name}}"></p>
+          <md-tooltip ng-if="header.tooltip" ng-class="header.tooltip.style" md-z-index="header.tooltip.zIndex" md-delay="header.tooltip.delay"
+              md-autohide="header.tooltip.autohide">
+              {{header.tooltip.text | translate}}
+            </md-tooltip>
+        </th>
+        <th md-column ng-repeat="action in $ctrl.actions" flex class="table-header">
+
+        </th>
+      </tr>
+    </thead>
+    <tbody md-body>
+      <tr md-row ng-repeat="object in $ctrl.objects track by $index" md-select="object" md-select-id="name" md-on-select="$ctrl.onSelection(object)"
+        md-on-deselect="$ctrl.onDeselection(object)" x-md-auto-select="$ctrl.config.autoSelect" ng-disabled="object[$ctrl.config.rowSelectDisable]"
+        md-auto-select>
+        <td md-cell ng-repeat="conf in $ctrl.newConfig" ng-class="conf[1].cellStyle">
+
+          <md-checkbox ng-if="(conf[1].type === 'checkbox')" ng-model="object[conf[0]]" aria-label="{{conf[0]}}"
+            ng-change="$ctrl.onAction({name: conf[1].action, object: object})" ng-class="conf[1].style" ng-disabled="conf[1].disabled">
+          </md-checkbox>
+
+          <md-input-container ng-if="(conf[1].type === 'input-text')" ng-model="object[conf[0]]" aria-label="{{conf[0]}}" ng-class="conf[1].style">
+            <label></label>
+            <input ng-model="object[conf[0]]" ng-change="$ctrl.onAction({name: conf[1].action, object: object})" ng-disabled="conf[1].disabled">
+          </md-input-container>
+
+          <md-input-container ng-if="(conf[1].type === 'input-number')" ng-model="object[conf[0]]" aria-label="{{conf[0]}}" ng-class="conf[1].style">
+            <label translate="{{conf[1].text}}"></label>
+            <input ng-model="object[conf[0]]"
+            ng-change="$ctrl.onAction({name: conf[1].action, object: object})"
+            type="number"
+             ng-disabled="conf[1].disabled || object[conf[1].options.depends]"
+             min="{{conf[1].options.min}}"
+             max="{{conf[1].options.max}}">
+          </md-input-container>
+
+          <span ng-if="(conf[1].type === 'text')" ng-class="conf[1].style" ng-disabled="conf[1].disabled" translate="{{object[conf[0]]}}">
+          </span>
+
+          <md-icon ng-if="(conf[1].type === 'icon')" ng-class="conf[1].style">
+            {{object[conf[0]]}}
+          </md-icon>
+
+          <div ng-if="(conf[1].type === 'icon-set')">
+            <div ng-repeat="option in conf[1].options">
+              <md-icon ng-if="object[conf[0]] == option.value" ng-class="option.style" >
+            {{option.icon}}
+            </md-icon>
+            </div>
+          </div>
+
+          <div ng-if="(conf[1].type === 'array-text')" ng-class="conf[1].style">
+              <span ng-repeat="value in object[conf[0]]">
+                <span>
+                  {{value|translate}}
+                  <span ng-if="!$last"></span>
+                </span>
+              </span>
+          </div>
+
+          <div ng-if="(conf[1].type === 'array-object')" layout="column">
+              <span ng-repeat="value in object[conf[0]] | limitTo: conf[1].limit">
+                  {{value[conf[1].value]}}
+              </span>
+          </div>
+
+
+          <span ng-if="(conf[1].type === 'filter')" ng-class="conf[1].style">
+              {{$ctrl.applyFilter(object[conf[0]], conf[1].filter, conf[1].option)}}
+          </span>
+
+          <span ng-if="(conf[1].type === 'child')" ng-class="conf[1].style" ng-disabled="conf[1].disabled">
+         {{object[conf[0]][conf[1].child]}}
+      </span>
+
+          <span ng-if="(conf[1].type === 'copy')" ng-class="conf[1].style" ng-disabled="conf[1].disabled">
+         {{object[conf[1].copy]}}
+      </span>
+
+          <span ng-if="(conf[1].type === 'filter-copy')" ng-class="conf[1].style" ng-disabled="conf[1].disabled">
+              {{$ctrl.applyFilter(object[conf[1].copy], conf[1].filter, conf[1].option)}}
+      </span>
+
+          <img ng-if="(conf[1].type === 'image')" ng-src="{{object[conf[0]]}}" ng-class="conf[1].style" alt="{{conf[1].alt}}"/>
+
+          <span ng-if="(conf[1].type === 'date')" ng-class="conf[1].style" ng-disabled="conf[1].disabled">
+         {{object[conf[0]]|date: conf[1].format}}
+      </span>
+
+        <div ng-if="conf[1].type === 'switch'" layout="row">
+        <span  flex></span>
+          <md-switch ng-if="conf[1].type === 'switch'" ng-model="object[conf[0]]"
+          ng-true-value="{{conf[1].trueValue}}" ng-false-value="{{conf[1].falseValue}}"
+          ng-change="$ctrl.onAction({name: conf[1].action, object: object})" aria-label="{{conf[0]}}" ng-disabled="conf[1].disabled">
+          </md-switch>
+          <span flex></span>
+        </div>
+
+        </td>
+        <td md-cell ng-if="$ctrl.actions && $ctrl.actions.length > 0" ng-repeat="action in $ctrl.actions" ng-class="action.cellStyle">
+          <!-- <div ng-if="(action.type === 'switch')" layout="row" ng-hide="object[action.hide.property] === action.hide.value"> -->
+          <div ng-if="(action.type === 'switch')" layout="row" ng-hide="(action.hide && (object[action.hide.property] === action.hide.value))">
+            <span  flex></span>
+          <md-switch ng-change="$ctrl.onAction({name: action.name, object: object})" aria-label="Switch 1"
+            ng-model="object[action.value]" translate="{{action.text|translate}}">
+            <md-tooltip ng-if="action.tooltip" ng-class="action.tooltip.style" md-z-index="action.tooltip.zIndex" md-delay="action.tooltip.delay"
+              md-autohide="action.tooltip.autohide" md-direction="{{action.tooltip.direction}}">
+              {{action.tooltip.text | translate}}
+            </md-tooltip>
+          </md-switch>
+           <span flex></span>
+          </div>
+
+
+          <md-button ng-if="(action.type === 'button')" ng-class="action.style" ng-click="$ctrl.onAction({name: action.name, object: object})"
+            aria-label="{{action.name}}" ng-hide="(action.hide && (object[action.hide.property] === action.hide.value))">
+            <md-icon ng-if="action.icon" ng-class="action.icon.style">
+              {{action.icon.name}}
+            </md-icon>
+            <md-tooltip ng-if="action.tooltip" ng-class="action.tooltip.style" md-z-index="action.tooltip.zIndex" md-delay="action.tooltip.delay"
+              md-autohide="action.tooltip.autohide" md-direction="{{action.tooltip.direction}}">
+              {{action.tooltip.text | translate}}
+            </md-tooltip>
+            <span ng-if="action.text">
+              {{action.text|translate}}
+            </span>
+          </md-button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</md-table-container>
+
+<md-table-pagination print-remove ng-if="$ctrl.pagination" ng-class="$ctrl.pagination.style" md-limit="$ctrl.pagination.limit"
+md-limit-options="$ctrl.pagination.limitOptions"
+  md-page="$ctrl.pagination.page" md-total="{{$ctrl.pagination.total}}" md-page-select="$ctrl.pagination.pageSelect" md-boundary-links="$ctrl.pagination.boundaryLinks"
+  md-on-paginate="$ctrl.paginar(page, limit)" md-label="{{$ctrl.pagination.label}}" md-foot-label="$ctrl.pagination.footLabel">
+</md-table-pagination>
