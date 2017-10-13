@@ -1,0 +1,12 @@
+<div id="main" layout="row">
+    <sidemenu print-remove menu="$ctrl.menu" config="$ctrl.configMenu" toolbar="$ctrl.configMenuToolbar" on-action="$ctrl.sideMenuAction(name, object)"
+      class="md-whiteframe-4dp" style="z-index: 2"></sidemenu>
+  
+      <div layout="column" flex>
+        <!-- <md-progress-linear md-mode="indeterminate" ng-if="!$ctrl.contentVisible"></md-progress-linear> -->
+        <breadcrums ng-if="$ctrl.menu"></breadcrums>
+        <md-content id="print-area" flex layout-padding style="height: 100%" ui-view>
+  
+        </md-content>
+      </div>  
+  </div>

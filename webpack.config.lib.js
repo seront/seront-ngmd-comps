@@ -7,25 +7,23 @@ export default {
   // resolve: { symlinks: false },
   entry: {
     // Ruta del archivo index.js principal del modulo
-    main: path.resolve(__dirname, 'src/md-dytable.module'),
+    main: path.resolve(__dirname, 'src/seront-ngmd-comps.module'),
   },
   //bibliotecas externas que requiere este paquete para funcionar pero
   //que no se incluyen en el
   externals: {
     "angular": "angular",
     "angular-translate": "angular-translate",
-    "angular-material": "angular-material",
-    "angular-sanitize": "angular-sanitize",
-    "angular-material-data-table": "angular-material-data-table"
+    "angular-material": "angular-material"
   },
   // target: 'web',
   target: 'node',
   output: {
     path: path.resolve(__dirname, 'lib'),
     // nombre de la libreria
-    filename: 'md-dytable.js',
+    filename: 'seront-ngmd-comps.js',
     // para que webpack exporte el
-    library: 'md-dytable',
+    library: 'seront-ngmd-comps',
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
