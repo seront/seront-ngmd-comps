@@ -1,5 +1,5 @@
 function routes($urlRouterProvider, $stateProvider) {
-    $urlRouterProvider.otherwise('/dashboard');
+    $urlRouterProvider.otherwise('/first-section/child');
   
     $stateProvider
       .state('app', {
@@ -14,16 +14,16 @@ function routes($urlRouterProvider, $stateProvider) {
       })
       .state('app.first-section.child', {
         url: '/child',
-        abstract: true,
-        component: 'child'
+        component: 'child',
+        icon: "settings"
       })
       .state('app.second-section', {
         url: 'second-section',
+        abstract: true,
         component: 'secondSection'
       })
       .state('app.second-section.child', {
         url: '/child',
-        abstract: true,
         component: 'child'
       })
 

@@ -5,7 +5,7 @@ import translate from 'angular-translate';
 
 
 import { default as SideMenuModule } from './components/sidemenu/sidemenu.module';
-import { default as BreadcrumsModule } from './components/breadcrumbs/breadcrumbs.module';
+import { default as BreadcrumsModule } from './components/breadcrums/breadcrums.module';
 
 
 

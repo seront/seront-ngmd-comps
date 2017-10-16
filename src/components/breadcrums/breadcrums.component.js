@@ -1,96 +1,75 @@
-
-
 class BreadcrumsController {
 
   constructor($transitions, $state) {
     this.$transitions = $transitions;
     this.$state = $state;
     this.steps = [];
-
     $transitions.onSuccess({}, () => {
-     this.current();
+     this.build();
     });
 
   }
 
-  current() {
-    let level = "^";
-    let steps = (this.$state.current.name).split('.');
+  build() {
+    let level = "";
+    let steps = ((this.$state.current.name).split('.')).length;
+    this.steps = [];
     let pre = [];
-    for(let i = 0; i < steps.length; i++){
-      let s = this.$state.get(level);
-
-      if(s.name !== '' && !s.abstract && s.url !== 'dashboard'){
-        let b = this.generateButton(s.url, s.name);
-        pre.push(b);
-      }else if(s.name !== '' && s.url !== 'dashboard'){
-        let b = this.generateButton(s.url, s.name, s.abstract);
-        pre.push(b);
-      }
+    for(let i = 0; i < steps; i++){
+      let s = i == 0 ? this.$state.current : this.$state.get(level);
+      pre.push(this.generateButton(s));
       level += '.^';
     }
-    this.steps = pre.reverse();
-    if(this.$state.current.url !== 'dashboard'){
-      let current = this.generateButton(this.$state.current.url, this.$state.current.name);
-      this.steps.push(current);
-    }
-
+    this.steps = this.names.length ? this.maskName(pre.reverse()) : pre.reverse();
   }
 
-
-
-  generateButton(url, state, abstract) {
-    if (url === '/') {
-      let btn = { name: 'DASHBOARD', icon: 'dashboard', state: 'app.dashboard' };
-      return btn;
-    } else {
-      let btn = { name: url === '/admin' ? 'administrar' : url.replace('/', ''),
-    icon: url === '/admin' ? 'settings' : this.buscarIcono(state)};
-      if (state && angular.isUndefined(abstract)) {
-        let s = state.split('.');
-        btn.state = s[s.length-1] === 'admin' ? '': state;
-      }
-      return btn;
-    }
-
+  last(array){
+    return array[array.length - 1];
   }
 
-  buscarIcono(state){
-    // console.log(this.menu.length);
-    let s = _.find(this.menu, ["state", state]);
-    // console.log("buscar icono", s, state);
-    if(s){
-      return s.icon
-    }else{
-      // console.log("busqueda profunda");
-      let icon = "";
-      _.forEach(this.menu, (value)=>{
-        if(value['items']){
-          // console.log("value['items']", value['items']);
-          let out = _.find(value['items'], ["state", state]);
-          // console.log("profunda out ", out);
-          if(out){
-              icon = out.icon
-              return;
-          }
+  generateButton(state) {
+    return {
+      icon: state.icon,
+      state: state.abstact? state.name : '',
+      name: this.last(state.name.split('.'))
+    }
+  }
+
+  maskName(buttons){
+    for(let index in this.names){
+      for(let i = 0; i < buttons.length; i++){
+        if(this.names[index].state === buttons[i].name){
+          buttons[i].name = this.names[index].name;
+          break;
         }
-      });
-      return icon;
+      }
     }
+    return buttons;
   }
 
-  $onInit() {
-    this.current();
+  $onInit(){
+    if(!angular.isUndefined(this.config)){
+      this.config.iconColor = angular.isUndefined(this.config.iconColor) ? 'md-primary' : this.config.iconColor;
+    }else{
+      this.setDefaults();
+    }
+    
+    this.build();
   }
 
-
-
+  setDefaults(){
+    this.config = {
+      // iconColor: 'md-primary',
+      iconColorLast: 'md-primary'
+    };
+  }
 }
 
-export const BreadcrumsComponent = {
+export default {
   template: require('./breadcrums.html'),
   controller: ['$transitions', '$state', BreadcrumsController],
   bindings: {
-    menu: '<'
+    names: '<',
+    config: '<'
   }
 };

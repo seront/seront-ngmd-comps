@@ -1,6 +1,13 @@
-<md-toolbar style="z-index: 1" class="md-accent" layout="row" layout-align="start center">
+<div layout="row" layout-align="start center">
   <div ng-repeat-start="step in $ctrl.steps">
-    <md-button ui-sref="{{step.state}}" style="text-transform: capitalize" ng-class="{'md-primary': $last}" aria-label="breadCrums">
+    <md-button ng-if="!$last" ui-sref="{{step.state}}" style="text-transform: capitalize" ng-class="$ctrl.config.iconColor" aria-label="breadCrums">
+      <md-icon ng-if="step.icon">
+        {{step.icon}}
+      </md-icon>
+      <span>{{step.name|translate}}</span>
+    </md-button>
+
+    <md-button ng-if="$last" ui-sref="{{step.state}}" style="text-transform: capitalize" ng-class="$ctrl.config.iconColorLast" aria-label="breadCrums">
       <md-icon ng-if="step.icon">
         {{step.icon}}
       </md-icon>
@@ -8,4 +15,4 @@
     </md-button>
   </div>
   <span ng-repeat-end ng-if="!$last">/</span>
-</md-toolbar>
+</div>
