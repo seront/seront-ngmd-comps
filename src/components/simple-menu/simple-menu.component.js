@@ -54,8 +54,8 @@ class SideMenuController {
   }
 }
 
-export const SidemenuComponent = {
-  template: require('./sideMenu.html'),
+export default {
+  template: require('./simple-menu.html'),
   // controller: SideMenuController,
   controller: ['$state', '$mdSidenav', '$log', SideMenuController],
   bindings: {

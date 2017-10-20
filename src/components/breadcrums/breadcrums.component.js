@@ -15,12 +15,19 @@ class BreadcrumsController {
     let steps = ((this.$state.current.name).split('.')).length;
     this.steps = [];
     let pre = [];
+
     for(let i = 0; i < steps; i++){
       let s = i == 0 ? this.$state.current : this.$state.get(level);
       pre.push(this.generateButton(s));
       level += '.^';
     }
-    this.steps = this.names.length ? this.maskName(pre.reverse()) : pre.reverse();
+    
+    if(angular.isArray(this.names)){
+      this.steps = this.maskName(pre.reverse());  
+    }else{
+      this.steps = pre.reverse();
+    }
+    
   }
 
   last(array){

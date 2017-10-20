@@ -4,8 +4,8 @@ md-disable-scroll-target="{{$ctrl.config.disableScrollTarget}}"
 md-is-open="$ctrl.config.isOpen"
   md-is-locked-open="{{$ctrl.config.isLockedOpen}}"
   md-component-id="{{$ctrl.config.componentId}}">
-
-  <md-content layout-padding ng-class="$ctrl.config.contentStyle">
+<accordion menu="$ctrl.menu"></accordion>
+  <!-- <md-content layout-padding ng-class="$ctrl.config.contentStyle">
      <md-list>
       <md-list-item ng-repeat-start="item in $ctrl.menu" ng-click="$ctrl.action(item)">
         <md-icon>{{item.icon}}</md-icon>
@@ -15,7 +15,6 @@ md-is-open="$ctrl.config.isOpen"
       <md-content ng-if="item.expanded" style="padding: 0px;">
         <md-divider></md-divider>
         <md-list ng-if="item.items" style="padding: 0px;">
-          <!-- <md-list-item layout="row" ng-repeat="subitem in item.items" ui-sref="{{subitem.state}}"> -->
           <md-list-item layout="row" ng-repeat="subitem in item.items" ng-click="$ctrl.action(subitem)">
             <span flex="15">
         </span>
@@ -30,7 +29,5 @@ md-is-open="$ctrl.config.isOpen"
       </md-content>
       <md-divider ng-repeat-end ng-hide="$last"></md-divider>
     </md-list>
-
-
-  </md-content>
+  </md-content> -->
 </md-sidenav>
